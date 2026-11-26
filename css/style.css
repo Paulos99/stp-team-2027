@@ -839,35 +839,6 @@ button { color: inherit; }
   letter-spacing: .01em;
   padding-inline: 16px;
 }
-.join__form {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  min-height: max(70svh, 640px);
-}
-.join__frame {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  height: max(70svh, 640px);
-  min-height: max(70svh, 640px);
-  border: 0;
-  border-radius: 8px;
-  background: var(--night);
-}
-.join__form-fallback {
-  margin: 14px 0 0;
-  font-size: 14px;
-  line-height: 1.45;
-}
-.join__form-fallback a {
-  color: var(--cyan);
-  text-underline-offset: 3px;
-}
-.join__form-fallback a:focus-visible {
-  outline: 3px solid var(--cyan);
-  outline-offset: 4px;
-}
 .join__driver { position: absolute; height: 74%; width: 65%; object-fit: contain; right: 0; bottom: 8%; }
 .join__car { position: absolute; width: 115%; height: 55%; object-fit: contain; right: -10%; bottom: 0; z-index: 2; }
 .join__season { position: absolute; top: 8%; left: 6%; font-family: "STP Display", sans-serif; font-size: clamp(70px, 11vw, 190px); color: rgba(255,255,255,.1); }
@@ -879,8 +850,6 @@ button { color: inherit; }
     padding-bottom: max(80px, env(safe-area-inset-bottom));
   }
   .join__content { width: 100%; text-align: center; }
-  .join__form { min-height: max(92svh, 1040px); }
-  .join__frame { height: max(92svh, 1040px); min-height: max(92svh, 1040px); }
   .join__content h2 { font-size: clamp(48px, 10vw, 82px); }
   .join__content .join__copy { margin-inline: auto; }
   .join__poster { position: relative; inset: auto; height: 340px; margin: -35px -20px 24px; }

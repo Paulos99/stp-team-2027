@@ -14,7 +14,7 @@
     const message = event.data;
     if (message?.source !== "stp-sound-battle" || message.version !== 1) return;
     if (message.action === "skip" || message.action === "apply") {
-      application?.querySelector(".join__frame")?.focus({ preventScroll: true });
+      application?.querySelector("[data-apply]")?.focus({ preventScroll: true });
       application?.scrollIntoView({ block: "start" });
     }
   });
@@ -23,7 +23,8 @@
   const heroScroll = document.querySelector("[data-hero-scroll]");
   const menuToggle = document.querySelector(".menu-toggle");
   const menu = document.querySelector(".site-menu");
-  const primaryApply = document.querySelector(".apply-button");
+  const applyButtons = document.querySelectorAll("[data-apply]");
+  const primaryApply = document.querySelector(".hero .apply-button");
   const scrollRevealItems = document.querySelectorAll("[data-scroll-reveal]");
   const faqItems = document.querySelectorAll(".faq__item");
   const aboutVisual = document.querySelector("[data-about-visual]");
@@ -136,6 +137,13 @@
   primaryApply.addEventListener("pointerleave", () => setFocusScene(false));
   primaryApply.addEventListener("focus", () => setFocusScene(true));
   primaryApply.addEventListener("blur", () => setFocusScene(false));
+
+  applyButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      if (!CONFIG.formUrl) return;
+      window.open(CONFIG.formUrl, "_blank", "noopener,noreferrer");
+    });
+  });
 
   const setFaqItem = (item, open) => {
     const button = item.querySelector(".faq__question");
