@@ -37,7 +37,7 @@ body {
 }
 .scene { z-index: -1; overflow: hidden; }
 .city {
-  background: #452546 url("../assets/backgrounds/waterfront-intro.png") center center / cover no-repeat;
+  background: #452546 url("../assets/backgrounds/waterfront-intro.webp") center center / cover no-repeat;
   transform: translateX(var(--pan)) scale(var(--zoom));
 }
 .grade {
@@ -170,9 +170,9 @@ button:active, .button:active { transform: translateY(1px); }
 .hero[data-pose="victory"] [data-pose="victory"],
 .hero[data-pose="defeat"] [data-pose="defeat"] { opacity: 1; }
 .city.wide,.city.garage,.city.arena { opacity: 0; transition: opacity .5s ease; }
-.city.wide { background-image: url("../assets/backgrounds/waterfront-wide.png"); }
-.city.garage { background-image: url("../assets/backgrounds/workshop.png"); }
-.city.arena { background-image: url("../assets/backgrounds/arena.png"); }
+.city.wide { background-image: url("../assets/backgrounds/waterfront-wide.webp"); }
+.city.garage { background-image: url("../assets/backgrounds/workshop.webp"); }
+.city.arena { background-image: url("../assets/backgrounds/arena.webp"); }
 .game:is([data-state="reveal"],[data-state="choice"]) .wide,
 .game[data-state="prep"] .garage,
 .game:is([data-state="drive"],[data-state="measure"],[data-state="break"],[data-state="win"],[data-state="lose"]) .arena { opacity: 1; }
@@ -314,4 +314,13 @@ button:active, .button:active { transform: translateY(1px); }
 }
 .sound-toggle[aria-pressed="false"] { border-color:#978caa; color:#d7cfe0; }
 .sound-toggle:disabled { cursor:default; }
+
+@media (max-width: 700px) {
+  button, a { touch-action: manipulation; }
+  .material { min-height: 48px; }
+  .sound-toggle {
+    top: max(3.1rem, calc(env(safe-area-inset-top) + 12px));
+    right: max(12px, env(safe-area-inset-right));
+  }
+}
 

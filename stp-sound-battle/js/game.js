@@ -20,8 +20,8 @@
   const audio = new window.StpAudio(config, get("#sound-toggle"));
   const narrow = matchMedia("(max-width: 700px) and (orientation: portrait)");
   const materials = {
-    stp: ["StP Bronner SPL Extreme", "bronner-photo.png"],
-    other: ["Другая виброизоляция", "neutral-sheet.png"]
+    stp: ["StP Bronner SPL Extreme", "bronner-photo.webp"],
+    other: ["Другая виброизоляция", "neutral-sheet.webp"]
   };
   let state;
   let branch;

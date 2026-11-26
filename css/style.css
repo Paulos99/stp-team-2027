@@ -236,7 +236,7 @@ button { color: inherit; }
 
 .hero__image {
   inset: -4% !important;
-  background-image: url("../assets/images/hero-neon-team-user-v3.png");
+  background-color: var(--night);
   background-position: center 58%;
   background-size: cover;
   transform: translate3d(calc(var(--mx) * -12px), calc(var(--my) * -8px), 0) scale(1.06);
@@ -245,6 +245,10 @@ button { color: inherit; }
 }
 
 @keyframes scene-breathe { to { scale: 1.09; } }
+
+@media (min-width: 1281px), (min-width: 901px) and (orientation: landscape) {
+  .hero__image { background-image: url("../assets/images/hero-neon-team-user-v3.webp"); }
+}
 
 .hero__grade {
   background:
@@ -822,7 +826,7 @@ button { color: inherit; }
 .join__city {
   position: absolute;
   inset: 0 -10% 0 -30%;
-  background: url("../stp-sound-battle/assets/backgrounds/waterfront-wide.png") center / cover no-repeat;
+  background: url("../stp-sound-battle/assets/backgrounds/waterfront-wide.webp") center / cover no-repeat;
   opacity: .64;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 36%), linear-gradient(180deg, transparent, #000 22%, #000 72%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 36%), linear-gradient(180deg, transparent, #000 22%, #000 72%, transparent);
@@ -835,12 +839,48 @@ button { color: inherit; }
   letter-spacing: .01em;
   padding-inline: 16px;
 }
+.join__form {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: max(70svh, 640px);
+}
+.join__frame {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: max(70svh, 640px);
+  min-height: max(70svh, 640px);
+  border: 0;
+  border-radius: 8px;
+  background: var(--night);
+}
+.join__form-fallback {
+  margin: 14px 0 0;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.join__form-fallback a {
+  color: var(--cyan);
+  text-underline-offset: 3px;
+}
+.join__form-fallback a:focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: 4px;
+}
 .join__driver { position: absolute; height: 74%; width: 65%; object-fit: contain; right: 0; bottom: 8%; }
 .join__car { position: absolute; width: 115%; height: 55%; object-fit: contain; right: -10%; bottom: 0; z-index: 2; }
 .join__season { position: absolute; top: 8%; left: 6%; font-family: "STP Display", sans-serif; font-size: clamp(70px, 11vw, 190px); color: rgba(255,255,255,.1); }
 @media (max-width: 900px) {
-  .join { display: block; padding-top: 100px; padding-bottom: 80px; }
+  .join {
+    display: block;
+    padding-top: 100px;
+    padding-inline: max(20px, env(safe-area-inset-left)) max(20px, env(safe-area-inset-right));
+    padding-bottom: max(80px, env(safe-area-inset-bottom));
+  }
   .join__content { width: 100%; text-align: center; }
+  .join__form { min-height: max(92svh, 1040px); }
+  .join__frame { height: max(92svh, 1040px); min-height: max(92svh, 1040px); }
   .join__content h2 { font-size: clamp(48px, 10vw, 82px); }
   .join__content .join__copy { margin-inline: auto; }
   .join__poster { position: relative; inset: auto; height: 340px; margin: -35px -20px 24px; }
@@ -911,14 +951,7 @@ button { color: inherit; }
     animation: none;
     transform: none;
   }
-  .hero__image::after {
-    content: "";
-    position: absolute;
-    inset: auto 0 13%;
-    aspect-ratio: 1.55;
-    background: url("../assets/images/hero-neon-team-user-v3.png") center / cover no-repeat;
-    mask-image: linear-gradient(transparent, #000 26%, #000 77%, transparent);
-  }
+  .hero__image::after { content: none; }
   .hero__grade { background: linear-gradient(180deg, rgba(5,6,17,.18), transparent 52%, transparent 76%, rgba(5,6,17,.58)); }
   .hero__title-line { color: #f7f7fb; background: none; -webkit-text-stroke: 1px #101329; }
   .hero__title-line--year { color: #81e8ff; }
@@ -1005,7 +1038,7 @@ button { color: inherit; }
   .hero__image {
     inset: 0 !important;
     background-color: var(--night);
-    background-image: url("../assets/images/hero-neon-team-user-v3.png"), radial-gradient(ellipse at center, #21153d, var(--night));
+    background-image: radial-gradient(ellipse at center, #21153d, var(--night));
     background-size: 100% auto, cover;
     background-position: center, center;
     background-repeat: no-repeat, no-repeat;
@@ -1016,6 +1049,7 @@ button { color: inherit; }
 
 @media (max-height: 500px) and (orientation: landscape) {
   .hero { min-height: 420px; }
+  .hero__image { background-image: url("../assets/images/hero-neon-team-phone.webp"); }
   .hero-scroll { height: 165svh; }
   .hero__eyebrow { margin-top: 8px; }
   .hero__title-wrap { top: 42%; width: min(58vw, 660px); }
@@ -1060,7 +1094,7 @@ button { color: inherit; }
     content: "";
     position: absolute;
     inset: 0;
-    background-image: url("../assets/images/hero-neon-team-mobile.png");
+    background-image: url("../assets/images/hero-neon-team-mobile.webp");
     background-repeat: no-repeat;
   }
   .hero__image::before {
@@ -1078,7 +1112,7 @@ button { color: inherit; }
 @media (max-width: 540px) {
   .hero__image {
     background-color: var(--night);
-    background-image: url("../assets/images/hero-neon-team-phone.png"), radial-gradient(ellipse at 25% 58%, #74365e, #090b1e);
+    background-image: url("../assets/images/hero-neon-team-phone.webp"), radial-gradient(ellipse at 25% 58%, #74365e, #090b1e);
     background-size: max(108vw, 50svh) auto, cover;
     background-position: center 40%, center;
     background-repeat: no-repeat;
@@ -1219,7 +1253,7 @@ button { color: inherit; }
 @media (min-width: 541px) and (max-width: 1280px) and (orientation: portrait) {
   .hero__image {
     inset: -4% !important;
-    background-image: url("../assets/images/hero-neon-team-mobile.png");
+    background-image: url("../assets/images/hero-neon-team-mobile.webp");
     background-size: cover;
     background-position: center 46%;
     background-repeat: no-repeat;
@@ -1260,7 +1294,7 @@ button { color: inherit; }
 @media (min-width: 901px) and (max-width: 1199px) and (orientation: landscape) {
   .hero__image {
     inset: -4% !important;
-    background-image: url("../assets/images/hero-neon-team-user-v3.png");
+    background-image: url("../assets/images/hero-neon-team-user-v3.webp");
     background-size: cover;
     background-position: center 58%;
     background-repeat: no-repeat;
@@ -1282,7 +1316,7 @@ button { color: inherit; }
 @media (min-width: 541px) and (max-width: 900px) and (min-height: 600px) and (max-height: 1000px) and (min-aspect-ratio: 4 / 3) and (max-aspect-ratio: 3 / 2) {
   .hero__image {
     inset: -4% !important;
-    background-image: url("../assets/images/hero-neon-team-user-v3.png");
+    background-image: url("../assets/images/hero-neon-team-user-v3.webp");
     background-size: cover;
     background-position: center 58%;
     background-repeat: no-repeat;
@@ -1327,7 +1361,7 @@ button { color: inherit; }
 @media (min-width: 2500px) and (max-width: 2800px) and (min-height: 1750px) and (max-height: 2000px) and (orientation: landscape) {
   .hero__image {
     inset: -4% !important;
-    background-image: url("../assets/images/hero-neon-team-user-v3.png");
+    background-image: url("../assets/images/hero-neon-team-user-v3.webp");
     background-size: cover;
     background-position: center 58%;
     background-repeat: no-repeat;
@@ -1346,4 +1380,61 @@ button { color: inherit; }
   .about__copy { width: min(760px, 82%); font-size: clamp(22px, 1.25vw, 34px); }
   .about__signal { width: min(1050px, 92%); gap: 20px; font-size: 15px; }
   .about__visual-label { padding: 12px 15px; font-size: 15px; }
+}
+
+/* Телефоны и слабые экраны: короткий первый экран, крупные нажатия, без тяжёлых эффектов. */
+@media (max-width: 900px) {
+  html { overflow-x: hidden; }
+  a, button { touch-action: manipulation; }
+  .menu-toggle {
+    width: 48px;
+    height: 48px;
+    backdrop-filter: none;
+    background: rgba(6, 7, 18, .9);
+  }
+  .hero-scroll { height: 100svh; }
+  .hero { position: relative; }
+  .hero__scene {
+    opacity: 1;
+    transform: none;
+    border-radius: 0;
+    box-shadow: none;
+    will-change: auto;
+  }
+  .hero__image { animation: none; transform: none; transition: none; will-change: auto; }
+  .hero__beam, .hero__grid, .faq__ghost { display: none; }
+  .hero__eyebrow b { padding: 7px 9px; font-size: 12px; letter-spacing: .08em; }
+  .hero__footer { padding-bottom: env(safe-area-inset-bottom); }
+  .apply-button { min-height: 52px; font-size: 16px; }
+  .about {
+    position: relative;
+    top: auto;
+    margin-top: 0;
+    opacity: 1;
+    translate: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  :is(#levels, #sound-battle, #join, #faq) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 80svh;
+    opacity: 1;
+    translate: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .faq__question { min-height: 56px; padding-block: 16px; }
+  .faq__question i { display: inline-grid; width: 44px; height: 44px; }
+  .join .apply-button { width: 100%; max-width: none; }
+  .levels__note { flex-wrap: wrap; justify-content: flex-start; text-align: left; }
+  .level__identity { display: contents; }
+  .level__identity > span,
+  .level__identity > h3 { grid-column: 2; }
+  .level__description { grid-column: 1 / -1; margin-top: 8px; max-width: none; }
+  .site-footer { padding-bottom: max(18px, env(safe-area-inset-bottom)); }
+}
+
+@media (hover: none) {
+  .apply-button:hover,
+  .apply-button:focus-visible { transform: none; }
 }

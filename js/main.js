@@ -14,7 +14,7 @@
     const message = event.data;
     if (message?.source !== "stp-sound-battle" || message.version !== 1) return;
     if (message.action === "skip" || message.action === "apply") {
-      application?.querySelector("button")?.focus({ preventScroll: true });
+      application?.querySelector(".join__frame")?.focus({ preventScroll: true });
       application?.scrollIntoView({ block: "start" });
     }
   });
@@ -23,14 +23,13 @@
   const heroScroll = document.querySelector("[data-hero-scroll]");
   const menuToggle = document.querySelector(".menu-toggle");
   const menu = document.querySelector(".site-menu");
-  const applyButtons = document.querySelectorAll("[data-apply]");
   const primaryApply = document.querySelector(".apply-button");
-  const toast = document.querySelector(".status-toast");
   const scrollRevealItems = document.querySelectorAll("[data-scroll-reveal]");
   const faqItems = document.querySelectorAll(".faq__item");
   const aboutVisual = document.querySelector("[data-about-visual]");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let toastTimer;
+  const compact = window.matchMedia("(max-width: 900px)").matches;
+  const saveData = navigator.connection?.saveData === true;
 
   const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
   const rangeProgress = (value, start, end) => clamp((value - start) / (end - start));
@@ -40,9 +39,30 @@
 
   if (reduceMotion) {
     finishLoading();
+  } else if (compact || saveData) {
+    const reveal = () => window.setTimeout(finishLoading, 450);
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", reveal, { once: true });
+    else reveal();
+    window.setTimeout(finishLoading, 2000);
   } else {
     window.addEventListener("load", () => window.setTimeout(finishLoading, CONFIG.loaderDuration), { once: true });
     window.setTimeout(finishLoading, 4200);
+  }
+
+  if (battleFrame?.dataset.src) {
+    const loadBattle = () => {
+      if (!battleFrame.getAttribute("src")) battleFrame.src = battleFrame.dataset.src;
+    };
+    if ("IntersectionObserver" in window) {
+      const battleObserver = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        loadBattle();
+        battleObserver.disconnect();
+      }, { rootMargin: "480px 0px" });
+      battleObserver.observe(battleFrame);
+    } else {
+      loadBattle();
+    }
   }
 
   const setMenu = (open) => {
@@ -117,22 +137,6 @@
   primaryApply.addEventListener("focus", () => setFocusScene(true));
   primaryApply.addEventListener("blur", () => setFocusScene(false));
 
-  const showToast = () => {
-    window.clearTimeout(toastTimer);
-    toast.classList.add("is-visible");
-    toastTimer = window.setTimeout(() => toast.classList.remove("is-visible"), 3600);
-  };
-
-  applyButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      if (CONFIG.formUrl) {
-        window.open(CONFIG.formUrl, "_blank", "noopener,noreferrer");
-        return;
-      }
-      showToast();
-    });
-  });
-
   const setFaqItem = (item, open) => {
     const button = item.querySelector(".faq__question");
     const answer = item.querySelector(".faq__answer");
@@ -171,7 +175,7 @@
     scrollRevealItems.forEach((item) => revealObserver.observe(item));
   }
 
-  if (!reduceMotion && aboutVisual) {
+  if (!reduceMotion && !compact && aboutVisual) {
     let aboutTicking = false;
     const updateAboutParallax = () => {
       const rect = aboutVisual.getBoundingClientRect();
@@ -189,7 +193,7 @@
     updateAboutParallax();
   }
 
-  if (!reduceMotion && heroScroll) {
+  if (!reduceMotion && !compact && heroScroll) {
     let heroTicking = false;
     const about = document.querySelector("#about");
     const sections = document.querySelectorAll("#levels, #sound-battle, #join, #faq");
