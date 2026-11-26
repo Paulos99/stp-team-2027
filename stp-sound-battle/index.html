@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>STP — Crush test</title>
+<link rel="stylesheet" href="css/game.css">
+<script defer src="js/config.js"></script>
+<script defer src="js/audio.js"></script>
+<script defer src="js/game.js"></script>
+</head>
+<body>
+<main class="game" data-state="start" aria-label="STP — Crush test">
+  <div class="scene" aria-hidden="true">
+    <div class="city"></div><div class="city wide"></div><div class="city garage"></div><div class="city arena"></div>
+    <div class="grade"></div>
+    <div class="car">
+      <img class="closed" src="assets/cars/closed.png" alt="">
+      <img class="opened" src="assets/cars/customer-open-car.png" alt="">
+    </div>
+    <div class="hero">
+      <div class="shadow"></div>
+      <img src="assets/characters/walk-a.png" data-pose="left" alt="">
+      <img src="assets/characters/walk-b.png" data-pose="right" alt="">
+      <img src="assets/characters/neutral.png" data-pose="neutral" alt="">
+      <img src="assets/characters/arms-crossed.png" data-pose="ready" alt="">
+      <img src="assets/characters/turn-step.png" data-pose="turn" alt="">
+      <img src="assets/characters/victory.png" data-pose="victory" alt="">
+      <img src="assets/characters/defeat.png" data-pose="defeat" alt="">
+    </div>
+    <canvas class="effects"></canvas>
+    <img class="ash" src="assets/effects/ash-pile.png" alt="">
+    <img class="trophy" src="assets/effects/trophy.png" alt="">
+    <div class="impact"></div>
+  </div>
+
+  <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="true" aria-label="Выключить звук">Звук вкл.</button>
+
+  <section class="start screen" aria-labelledby="title">
+    <h1 id="title"><img class="brand-logo" src="assets/ui/stp-logo-white.png" alt="STP"><span class="title">Crush <em>test</em></span></h1>
+    <p class="tagline">Проверь, кто реально держит давление</p>
+    <div class="actions">
+      <button class="primary" id="play">Начать игру</button>
+      <button id="skip">Пропустить</button>
+    </div>
+  </section>
+
+  <section class="choice" hidden aria-labelledby="choice-title">
+    <p class="kicker">Подготовка к замеру</p>
+    <h2 id="choice-title" tabindex="-1">Выбери виброизоляцию</h2>
+    <button class="material" data-material="other">
+      <img src="assets/effects/neutral-sheet.png" alt="">Другая виброизоляция
+    </button>
+    <button class="material" data-material="stp">
+      <img src="assets/effects/bronner-photo.png" alt="">StP Bronner SPL Extreme
+    </button>
+  </section>
+
+  <aside class="workbench" hidden aria-label="Комиксный крупный план подготовки двери">
+    <p class="kicker">ПЕРЕДНЯЯ ДВЕРЬ / ПОДГОТОВКА</p>
+    <div class="door-detail" aria-hidden="true">
+      <img src="assets/ui/door-metal.svg" alt="">
+      <img class="install-sheet" alt="">
+      <div class="roller"></div>
+    </div>
+    <strong id="material-name"></strong>
+    <small>Игровая схема обработки</small>
+  </aside>
+
+  <div class="meter" hidden>
+    <strong>ЗАМЕР ЗВУКОВОГО ДАВЛЕНИЯ</strong>
+    <div class="meter-reading" aria-hidden="true"><span id="meter-value">0</span> <span class="meter-unit">дБ</span></div>
+    <div class="meter-track" role="progressbar" aria-label="Игровой уровень звукового давления" aria-valuemin="0" aria-valuemax="161" aria-valuenow="0" aria-valuetext="0 дБ — игровой показатель"></div>
+    <small>Игровой показатель</small>
+  </div>
+
+  <section class="outro screen" hidden aria-labelledby="outro-title">
+    <p class="kicker" id="outro-label"></p>
+    <h2 id="outro-title" tabindex="-1"></h2>
+    <p id="outro-copy"></p>
+    <div class="actions">
+      <button class="primary" id="apply">Подать заявку</button>
+      <button id="replay">Сыграть ещё раз</button>
+    </div>
+    <p id="apply-note" role="status" hidden></p>
+  </section>
+
+  <div class="progress" aria-hidden="true"><span></span></div>
+  <p class="sr-only" id="status" role="status"></p>
+</main>
+</body>
+</html>
+
