@@ -1351,7 +1351,7 @@ button { color: inherit; }
   .about__visual-label { padding: 12px 15px; font-size: 15px; }
 }
 
-/* Телефоны и слабые экраны: короткий первый экран, крупные нажатия, без тяжёлых эффектов. */
+/* Телефоны: крупные нажатия. Плашка сезона стоит над фото, а не на лицах. */
 @media (max-width: 900px) {
   html { overflow-x: hidden; }
   a, button { touch-action: manipulation; }
@@ -1361,37 +1361,14 @@ button { color: inherit; }
     backdrop-filter: none;
     background: rgba(6, 7, 18, .9);
   }
-  .hero-scroll { height: 100svh; }
-  .hero { position: relative; }
-  .hero__scene {
-    opacity: 1;
-    transform: none;
-    border-radius: 0;
-    box-shadow: none;
-    will-change: auto;
+  .about__visual-label {
+    top: 0;
+    right: 14px;
+    transform: translateY(calc(-100% - 12px)) rotate(2deg);
   }
-  .hero__image { animation: none; transform: none; transition: none; will-change: auto; }
-  .hero__beam, .hero__grid, .faq__ghost { display: none; }
   .hero__eyebrow b { padding: 7px 9px; font-size: 12px; letter-spacing: .08em; }
   .hero__footer { padding-bottom: env(safe-area-inset-bottom); }
   .apply-button { min-height: 52px; font-size: 16px; }
-  .about {
-    position: relative;
-    top: auto;
-    margin-top: 0;
-    opacity: 1;
-    translate: none;
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
-  :is(#levels, #sound-battle, #join, #faq) {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 80svh;
-    opacity: 1;
-    translate: none;
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
   .faq__question { min-height: 56px; padding-block: 16px; }
   .faq__question i { display: inline-grid; width: 44px; height: 44px; }
   .join .apply-button { width: 100%; max-width: none; }
@@ -1401,6 +1378,40 @@ button { color: inherit; }
   .level__identity > h3 { grid-column: 2; }
   .level__description { grid-column: 1 / -1; margin-top: 8px; max-width: none; }
   .site-footer { padding-bottom: max(18px, env(safe-area-inset-bottom)); }
+}
+
+/* Слабый телефон: без длинной сценой прокрутки и масок. Обычные телефоны оставляют переход как на компьютере. */
+@media (max-width: 900px) {
+  html.is-lite .hero-scroll { height: 100svh; }
+  html.is-lite .hero { position: relative; }
+  html.is-lite .hero__scene {
+    opacity: 1;
+    transform: none;
+    border-radius: 0;
+    box-shadow: none;
+    will-change: auto;
+  }
+  html.is-lite .hero__image { animation: none; transform: none; transition: none; will-change: auto; }
+  html.is-lite .hero__beam,
+  html.is-lite .hero__grid,
+  html.is-lite .faq__ghost { display: none; }
+  html.is-lite .about {
+    position: relative;
+    top: auto;
+    margin-top: 0;
+    opacity: 1;
+    translate: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  html.is-lite :is(#levels, #sound-battle, #join, #faq) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 80svh;
+    opacity: 1;
+    translate: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
 }
 
 @media (hover: none) {

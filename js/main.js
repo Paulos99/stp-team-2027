@@ -30,7 +30,13 @@
   const aboutVisual = document.querySelector("[data-about-visual]");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const compact = window.matchMedia("(max-width: 900px)").matches;
-  const saveData = navigator.connection?.saveData === true;
+  const connection = navigator.connection;
+  const saveData = connection?.saveData === true;
+  const weakLink = ["slow-2g", "2g"].includes(connection?.effectiveType);
+  const lowMemory = Number.isFinite(navigator.deviceMemory) && navigator.deviceMemory <= 2;
+  const lowCores = Number.isFinite(navigator.hardwareConcurrency) && navigator.hardwareConcurrency <= 2;
+  const lite = compact && (saveData || weakLink || lowMemory || lowCores || reduceMotion);
+  if (lite) root.classList.add("is-lite");
 
   const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
   const rangeProgress = (value, start, end) => clamp((value - start) / (end - start));
@@ -40,7 +46,7 @@
 
   if (reduceMotion) {
     finishLoading();
-  } else if (compact || saveData) {
+  } else if (lite || saveData) {
     const reveal = () => window.setTimeout(finishLoading, 450);
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", reveal, { once: true });
     else reveal();
@@ -183,7 +189,7 @@
     scrollRevealItems.forEach((item) => revealObserver.observe(item));
   }
 
-  if (!reduceMotion && !compact && aboutVisual) {
+  if (!reduceMotion && !lite && aboutVisual) {
     let aboutTicking = false;
     const updateAboutParallax = () => {
       const rect = aboutVisual.getBoundingClientRect();
@@ -201,7 +207,7 @@
     updateAboutParallax();
   }
 
-  if (!reduceMotion && !compact && heroScroll) {
+  if (!reduceMotion && !lite && heroScroll) {
     let heroTicking = false;
     const about = document.querySelector("#about");
     const sections = document.querySelectorAll("#levels, #sound-battle, #join, #faq");
