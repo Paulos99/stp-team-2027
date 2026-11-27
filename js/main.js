@@ -137,11 +137,91 @@
 
   const setFocusScene = (active) => hero.classList.toggle("is-focused", active);
   const battleSection = document.querySelector("#sound-battle");
-  primaryApply.addEventListener("click", () => {
+  let tourToken = 0;
+  const stopTour = () => { tourToken += 1; };
+  window.addEventListener("wheel", stopTour, { passive: true });
+  window.addEventListener("touchmove", stopTour, { passive: true });
+  window.addEventListener("keydown", (event) => {
+    if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "].includes(event.key)) stopTour();
+  });
+
+  const hold = (ms, token) => new Promise((resolve) => {
+    window.setTimeout(() => resolve(token === tourToken), ms);
+  });
+
+  const glideTo = (target, token) => new Promise((resolve) => {
+    const start = window.scrollY;
+    const distance = target - start;
+    if (token !== tourToken) {
+      resolve(false);
+      return;
+    }
+    if (Math.abs(distance) < 4) {
+      window.scrollTo(0, target);
+      resolve(true);
+      return;
+    }
+    const duration = Math.min(2600, Math.max(900, Math.abs(distance) / 0.75));
+    const startTime = performance.now();
+    const ease = (progress) => (progress < 0.5 ? 2 * progress * progress : 1 - ((-2 * progress + 2) ** 2) / 2);
+    const frame = (now) => {
+      if (token !== tourToken) {
+        resolve(false);
+        return;
+      }
+      const progress = Math.min(1, (now - startTime) / duration);
+      window.scrollTo(0, start + distance * ease(progress));
+      if (progress < 1) window.requestAnimationFrame(frame);
+      else resolve(true);
+    };
+    window.requestAnimationFrame(frame);
+  });
+
+  const tourStops = () => {
+    const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    const place = (element, offset) => {
+      if (!element) return null;
+      return Math.max(0, Math.min(maxScroll, element.getBoundingClientRect().top + window.scrollY - offset));
+    };
+    const about = document.querySelector("#about");
+    const planned = [
+      about ? Math.min(getAboutDocumentTop(about) + window.innerHeight * 0.16, maxScroll) : null,
+      place(document.querySelector("#levels-title"), 120),
+      ...[...document.querySelectorAll(".level")].map((level) => place(level, 96)),
+      place(battleSection, 0),
+    ].filter((value) => Number.isFinite(value));
+    const stops = [];
+    let cursor = window.scrollY + 48;
+    planned.forEach((stop) => {
+      if (stop > cursor) {
+        stops.push(stop);
+        cursor = stop + 120;
+      }
+    });
+    if (!stops.length && battleSection) stops.push(place(battleSection, 0));
+    return stops;
+  };
+
+  primaryApply.addEventListener("click", async () => {
     if (!battleSection) return;
     if (battleFrame?.dataset.src && !battleFrame.getAttribute("src")) battleFrame.src = battleFrame.dataset.src;
+    if (reduceMotion) {
+      if (window.location.hash !== "#sound-battle") window.history.pushState(null, "", "#sound-battle");
+      battleSection.scrollIntoView({ behavior: "auto", block: "start" });
+      return;
+    }
+    const token = ++tourToken;
+    const stops = tourStops();
+    for (let index = 0; index < stops.length; index += 1) {
+      const arrived = await glideTo(stops[index], token);
+      if (!arrived) return;
+      if (index < stops.length - 1) {
+        const waiting = await hold(1000, token);
+        if (!waiting) return;
+      }
+    }
+    if (token !== tourToken) return;
     if (window.location.hash !== "#sound-battle") window.history.pushState(null, "", "#sound-battle");
-    battleSection.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
   });
   primaryApply.addEventListener("pointerenter", () => setFocusScene(true));
   primaryApply.addEventListener("pointerleave", () => setFocusScene(false));
