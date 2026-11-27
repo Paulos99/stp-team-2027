@@ -281,7 +281,7 @@ button { color: inherit; }
 
 .hero__eyebrow {
   grid-row: 2;
-  z-index: 2;
+  z-index: 6;
   align-self: start;
   justify-self: center;
   margin-top: clamp(22px, 6vh, 76px);
@@ -1467,4 +1467,33 @@ button { color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   .countdown__value.is-tick,
   .join .apply-button.is-arriving { animation: none; }
+}
+
+/* Низкий экран ноутбука: заголовок не перекрывает строку набора и таймер. */
+@media (max-height: 1040px) and (min-width: 900px) {
+  .hero__eyebrow { margin-top: 4px; }
+  .hero__title-wrap { top: 45%; width: min(48vw, 680px); }
+  .hero__title { gap: 2px; }
+  .hero__title-line--stp,
+  .hero__title-line--team,
+  .hero__title-line--year { font-size: clamp(48px, 8.6vh, 112px); }
+  .hero { padding-bottom: 14px; }
+}
+
+.countdown--hero .countdown__value,
+.countdown--hero .countdown__unit small {
+  text-shadow: 0 2px 8px rgba(5,6,17,.9), 0 0 16px rgba(5,6,17,.75);
+}
+
+@media (max-width: 540px) {
+  .countdown--hero { margin-bottom: 28px; }
+  .hero__grade {
+    background:
+      linear-gradient(180deg, rgba(5,6,17,.42) 0%, transparent 22%, transparent 42%, rgba(5,6,17,.55) 68%, rgba(5,6,17,.9) 100%),
+      radial-gradient(ellipse at 50% 78%, rgba(5,6,17,.72), transparent 58%);
+  }
+  .hero__image {
+    transform: translate3d(calc(var(--mx) * -16px), calc(var(--my) * -12px), 0) scale(1.08);
+    transition: transform .2s linear;
+  }
 }

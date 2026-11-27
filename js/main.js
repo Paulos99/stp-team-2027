@@ -358,12 +358,43 @@
     updateHeroScroll();
   }
 
+  const setTilt = (x, y) => {
+    root.style.setProperty("--mx", clamp(x, -1, 1).toFixed(3));
+    root.style.setProperty("--my", clamp(y, -1, 1).toFixed(3));
+  };
+
   if (!reduceMotion && window.matchMedia("(pointer: fine)").matches) {
     window.addEventListener("pointermove", (event) => {
-      const x = (event.clientX / window.innerWidth - 0.5) * 2;
-      const y = (event.clientY / window.innerHeight - 0.5) * 2;
-      root.style.setProperty("--mx", x.toFixed(3));
-      root.style.setProperty("--my", y.toFixed(3));
+      setTilt((event.clientX / window.innerWidth - 0.5) * 2, (event.clientY / window.innerHeight - 0.5) * 2);
     }, { passive: true });
+  }
+
+  if (!reduceMotion && window.matchMedia("(pointer: coarse)").matches) {
+    let tiltOrigin = null;
+    let tiltListening = false;
+    const listenTilt = () => {
+      if (tiltListening) return;
+      tiltListening = true;
+      window.addEventListener("deviceorientation", (event) => {
+        if (event.gamma == null || event.beta == null) return;
+        if (!tiltOrigin) tiltOrigin = { beta: event.beta, gamma: event.gamma };
+        setTilt((event.gamma - tiltOrigin.gamma) / 18, (event.beta - tiltOrigin.beta) / 18);
+      }, { passive: true });
+    };
+    const requestTilt = () => {
+      const ask = DeviceOrientationEvent?.requestPermission;
+      if (typeof ask !== "function") {
+        listenTilt();
+        return;
+      }
+      ask.call(DeviceOrientationEvent).then((state) => {
+        if (state === "granted") listenTilt();
+      }).catch(() => {});
+    };
+    if (typeof DeviceOrientationEvent?.requestPermission === "function") {
+      window.addEventListener("pointerdown", requestTilt, { once: true });
+    } else {
+      listenTilt();
+    }
   }
 })();
