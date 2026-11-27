@@ -137,12 +137,61 @@
 
   const setFocusScene = (active) => hero.classList.toggle("is-focused", active);
   const battleSection = document.querySelector("#sound-battle");
+  let overviewFrame = 0;
+  let stopOverview = () => {};
+  const playOverview = () => {
+    stopOverview();
+    const rootStyle = document.documentElement.style;
+    const previousBehavior = rootStyle.scrollBehavior;
+    rootStyle.scrollBehavior = "auto";
+    const start = window.scrollY;
+    const target = Math.max(0, battleSection.getBoundingClientRect().top + start);
+    const distance = target - start;
+    const finish = () => {
+      window.cancelAnimationFrame(overviewFrame);
+      rootStyle.scrollBehavior = previousBehavior;
+      window.removeEventListener("wheel", onUserScroll);
+      window.removeEventListener("touchmove", onUserScroll);
+      stopOverview = () => {};
+    };
+    stopOverview = finish;
+    if (reduceMotion || Math.abs(distance) < 4) {
+      window.scrollTo(0, target);
+      finish();
+      return;
+    }
+    const duration = Math.min(28000, Math.max(9000, Math.abs(distance) / 0.18));
+    const started = performance.now();
+    const ignoreUntil = started + 700;
+    const ease = (progress) => {
+      const edge = 0.14;
+      const sine = (value) => 0.5 - Math.cos(Math.PI * value) / 2;
+      if (progress < edge) return sine(progress / edge) * edge;
+      if (progress > 1 - edge) return 1 - edge + sine((progress - (1 - edge)) / edge) * edge;
+      return progress;
+    };
+    function onUserScroll() {
+      if (performance.now() < ignoreUntil) return;
+      window.cancelAnimationFrame(overviewFrame);
+      finish();
+    }
+    window.addEventListener("wheel", onUserScroll, { passive: true });
+    window.addEventListener("touchmove", onUserScroll, { passive: true });
+    const frame = (now) => {
+      const progress = Math.min(1, (now - started) / duration);
+      window.scrollTo(0, start + distance * ease(progress));
+      if (progress < 1) overviewFrame = window.requestAnimationFrame(frame);
+      else {
+        if (window.location.hash !== "#sound-battle") window.history.pushState(null, "", "#sound-battle");
+        finish();
+      }
+    };
+    overviewFrame = window.requestAnimationFrame(frame);
+  };
   primaryApply.addEventListener("click", () => {
     if (!battleSection) return;
     if (battleFrame?.dataset.src && !battleFrame.getAttribute("src")) battleFrame.src = battleFrame.dataset.src;
-    if (window.location.hash !== "#sound-battle") window.history.pushState(null, "", "#sound-battle");
-    const top = Math.max(0, battleSection.getBoundingClientRect().top + window.scrollY);
-    window.scrollTo({ top, behavior: reduceMotion ? "auto" : "smooth" });
+    playOverview();
   });
   primaryApply.addEventListener("pointerenter", () => setFocusScene(true));
   primaryApply.addEventListener("pointerleave", () => setFocusScene(false));
