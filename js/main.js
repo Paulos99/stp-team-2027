@@ -160,7 +160,7 @@
       finish();
       return;
     }
-    const duration = Math.min(20000, Math.max(6500, Math.abs(distance) / 0.26));
+    const duration = Math.min(12000, Math.max(4200, Math.abs(distance) / 0.42));
     const started = performance.now();
     const ignoreUntil = started + 700;
     const ease = (progress) => {
