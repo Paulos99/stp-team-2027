@@ -4,6 +4,7 @@
   const CONFIG = {
     formUrl: "https://forms.yandex.ru/cloud/6b053cd2b9e5ca32023d131e",
     loaderDuration: 1800,
+    applicationsOpenAt: Date.parse("2026-12-01T00:00:00+03:00"),
   };
 
   const root = document.documentElement;
@@ -14,7 +15,8 @@
     const message = event.data;
     if (message?.source !== "stp-sound-battle" || message.version !== 1) return;
     if (message.action === "skip" || message.action === "apply") {
-      application?.querySelector("[data-apply]")?.focus({ preventScroll: true });
+      const applyButton = application?.querySelector("[data-apply]");
+      if (applyButton && !applyButton.hidden) applyButton.focus({ preventScroll: true });
       application?.scrollIntoView({ block: "start" });
     }
   });
@@ -134,10 +136,12 @@
   }));
 
   const setFocusScene = (active) => hero.classList.toggle("is-focused", active);
+  const battleSection = document.querySelector("#sound-battle");
   primaryApply.addEventListener("click", () => {
-    if (!application) return;
-    if (window.location.hash !== "#join") window.history.pushState(null, "", "#join");
-    application.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    if (!battleSection) return;
+    if (battleFrame?.dataset.src && !battleFrame.getAttribute("src")) battleFrame.src = battleFrame.dataset.src;
+    if (window.location.hash !== "#sound-battle") window.history.pushState(null, "", "#sound-battle");
+    battleSection.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
   });
   primaryApply.addEventListener("pointerenter", () => setFocusScene(true));
   primaryApply.addEventListener("pointerleave", () => setFocusScene(false));
@@ -150,6 +154,87 @@
       window.open(CONFIG.formUrl, "_blank", "noopener,noreferrer");
     });
   });
+
+  const countdowns = [...document.querySelectorAll("[data-countdown]")];
+  const plural = (value, one, few, many) => {
+    const abs = Math.abs(value) % 100;
+    const last = abs % 10;
+    if (abs > 10 && abs < 20) return many;
+    if (last > 1 && last < 5) return few;
+    if (last === 1) return one;
+    return many;
+  };
+  const unitNames = {
+    days: ["день", "дня", "дней"],
+    hours: ["час", "часа", "часов"],
+    minutes: ["минута", "минуты", "минут"],
+    seconds: ["секунда", "секунды", "секунд"],
+  };
+  let applicationsOpen = false;
+  let finalSecond = null;
+
+  const revealApplication = () => {
+    if (applicationsOpen) return;
+    applicationsOpen = true;
+    document.documentElement.classList.add("is-open");
+    countdowns.forEach((countdown) => {
+      countdown.hidden = true;
+    });
+    applyButtons.forEach((button) => {
+      button.hidden = false;
+      if (reduceMotion || lite) return;
+      button.classList.remove("is-arriving");
+      window.requestAnimationFrame(() => button.classList.add("is-arriving"));
+    });
+  };
+
+  const paintCountdown = (countdown, parts, final) => {
+    countdown.classList.toggle("is-final", final);
+    const units = final ? ["seconds"] : ["days", "hours", "minutes", "seconds"];
+    units.forEach((unit) => {
+      const slot = countdown.querySelector(`[data-unit="${unit}"]`);
+      if (!slot) return;
+      const value = slot.querySelector(".countdown__value");
+      const caption = slot.querySelector("small");
+      const next = String(parts[unit]).padStart(2, "0");
+      if (value.textContent !== next) {
+        value.textContent = next;
+        if (final && !reduceMotion && !lite) {
+          value.classList.remove("is-tick");
+          void value.offsetWidth;
+          value.classList.add("is-tick");
+        }
+      }
+      if (caption) caption.textContent = plural(parts[unit], ...unitNames[unit]);
+    });
+  };
+
+  const updateCountdown = () => {
+    const remaining = CONFIG.applicationsOpenAt - Date.now();
+    if (remaining <= 0) {
+      revealApplication();
+      return;
+    }
+    const totalSeconds = Math.ceil(remaining / 1000);
+    const final = totalSeconds <= 60;
+    const parts = {
+      days: Math.floor(totalSeconds / 86400),
+      hours: Math.floor((totalSeconds % 86400) / 3600),
+      minutes: Math.floor((totalSeconds % 3600) / 60),
+      seconds: totalSeconds % 60,
+    };
+    if (final && parts.seconds === 0) parts.seconds = 60;
+    countdowns.forEach((countdown) => paintCountdown(countdown, parts, final));
+    if (final && parts.seconds !== finalSecond) finalSecond = parts.seconds;
+  };
+
+  if (Number.isFinite(CONFIG.applicationsOpenAt)) {
+    updateCountdown();
+    const countdownTimer = window.setInterval(() => {
+      updateCountdown();
+      if (applicationsOpen) window.clearInterval(countdownTimer);
+    }, 250);
+  }
 
   const setFaqItem = (item, open) => {
     const button = item.querySelector(".faq__question");

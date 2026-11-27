@@ -12,7 +12,7 @@
   <title>STP Team 2027 — набор в команду</title>
   <link rel="preload" as="image" href="assets/images/hero-neon-team-phone.webp" media="(max-width: 540px)" fetchpriority="high">
   <link rel="stylesheet" href="css/style.css">
-  <script src="js/main.js?v=mobile-motion-1" defer></script>
+  <script src="js/main.js?v=countdown-1" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Перейти к содержимому</a>
@@ -72,7 +72,16 @@
 
       <div class="hero__footer reveal reveal--three">
         <div class="hero__action-zone">
-          <button class="apply-button" type="button">Подать заявку</button>
+          <div class="countdown countdown--hero" data-countdown>
+            <p class="countdown__label">До старта приёма заявок:</p>
+            <div class="countdown__board">
+              <span class="countdown__unit" data-unit="days"><b class="countdown__value">00</b><small>дней</small></span>
+              <span class="countdown__unit" data-unit="hours"><b class="countdown__value">00</b><small>часов</small></span>
+              <span class="countdown__unit" data-unit="minutes"><b class="countdown__value">00</b><small>минут</small></span>
+              <span class="countdown__unit" data-unit="seconds"><b class="countdown__value">00</b><small>секунд</small></span>
+            </div>
+          </div>
+          <button class="apply-button" type="button" data-play>Играть</button>
         </div>
         <div class="hero__meta" aria-label="Информация о сезоне">
           <span>#stpteam2027</span>
@@ -207,7 +216,16 @@
       <div class="join__content">
         <h2 id="join-title">Твой проект.<br><strong>Твой сезон.</strong></h2>
         <p class="join__copy">Расскажи о своём автомобиле и планах на сезон. Команда StP рассмотрит заявку и определит уровень участия по итогам отбора.</p>
-        <button class="apply-button" type="button" data-apply>Заполнить анкету</button>
+        <div class="countdown countdown--join" data-countdown>
+          <p class="countdown__label">До старта приёма заявок:</p>
+          <div class="countdown__board">
+            <span class="countdown__unit" data-unit="days"><b class="countdown__value">00</b><small>дней</small></span>
+            <span class="countdown__unit" data-unit="hours"><b class="countdown__value">00</b><small>часов</small></span>
+            <span class="countdown__unit" data-unit="minutes"><b class="countdown__value">00</b><small>минут</small></span>
+            <span class="countdown__unit" data-unit="seconds"><b class="countdown__value">00</b><small>секунд</small></span>
+          </div>
+        </div>
+        <button class="apply-button" type="button" data-apply hidden>Заполнить анкету</button>
       </div>
     </section>
     <section class="faq" id="faq" aria-labelledby="faq-title">
