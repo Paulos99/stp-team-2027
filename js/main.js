@@ -161,9 +161,9 @@
       resolve(true);
       return;
     }
-    const duration = Math.min(2600, Math.max(900, Math.abs(distance) / 0.75));
+    const duration = Math.min(3400, Math.max(1400, Math.abs(distance) / 0.55));
     const startTime = performance.now();
-    const ease = (progress) => (progress < 0.5 ? 2 * progress * progress : 1 - ((-2 * progress + 2) ** 2) / 2);
+    const ease = (progress) => progress * progress * progress * (progress * (progress * 6 - 15) + 10);
     const frame = (now) => {
       if (token !== tourToken) {
         resolve(false);
@@ -216,7 +216,7 @@
       const arrived = await glideTo(stops[index], token);
       if (!arrived) return;
       if (index < stops.length - 1) {
-        const waiting = await hold(1000, token);
+        const waiting = await hold(420, token);
         if (!waiting) return;
       }
     }

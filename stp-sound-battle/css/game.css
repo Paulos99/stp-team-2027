@@ -120,6 +120,15 @@ button, .button {
 }
 #play, #skip { font-style: italic; }
 .primary { background: #a91350; border-color: #ff73ab; box-shadow: 0 0 1rem #f73d8966; }
+@keyframes invite-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+.game[data-state="start"] #play { animation: invite-breathe 2.2s ease-in-out infinite; }
+.game[data-state="start"] #play:active { animation: none; transform: scale(.97); }
+@media (prefers-reduced-motion: reduce) {
+  .game[data-state="start"] #play { animation: none; }
+}
 button:hover, .button:hover { filter: brightness(1.22); }
 button:active, .button:active { transform: translateY(1px); }
 :focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
