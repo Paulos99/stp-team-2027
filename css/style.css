@@ -1488,7 +1488,9 @@ button { color: inherit; }
 @media (max-width: 540px) {
   .countdown--hero { margin-bottom: 28px; }
   .hero__grade {
-    background: linear-gradient(180deg, rgba(5,6,17,.2) 0%, transparent 16%, transparent 84%, rgba(5,6,17,.62) 100%);
+    background:
+      linear-gradient(180deg, rgba(5,6,17,.38) 0%, transparent 20%, transparent 70%, rgba(5,6,17,.78) 100%),
+      radial-gradient(ellipse at 50% 44%, transparent 0 32%, rgba(5,6,17,.22) 64%, rgba(5,6,17,.82) 100%);
   }
   .hero__image {
     transform: translate3d(calc(var(--mx) * -16px), calc(var(--my) * -12px), 0) scale(1.08);
